@@ -24,6 +24,10 @@ class PemesananResource extends Resource
 {
     protected static ?string $model = Pemesanan::class;
 
+    protected static ?string $navigationLabel = 'Pesanan';
+    protected static ?string $modelLabel = 'Pesanan';
+    protected static ?string $pluralModelLabel = 'Pesanan';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

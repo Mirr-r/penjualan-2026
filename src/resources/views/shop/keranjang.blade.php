@@ -11,15 +11,18 @@
 <div class="max-w-5xl mx-auto px-6 py-10">
 
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-4xl font-black">Keranjang Belanja</h1>
+    <h1 class="text-4xl font-black">Keranjang Belanja</h1>
 
-        <a href="/" class="bg-blue-700 text-white px-5 py-3 rounded-2xl font-bold">
-            Kembali Belanja
-        </a>
-        <a href="/pesanan" class="hover:text-blue-700">
-    Pesanan
-</a>
+    <a href="/" class="bg-blue-700 text-white px-5 py-3 rounded-2xl font-bold">
+        Kembali Belanja
+    </a>
+</div>
+
+@if (session('error'))
+    <div class="mb-6 bg-red-100 border border-red-300 text-red-700 px-6 py-4 rounded-2xl font-semibold">
+        {{ session('error') }}
     </div>
+@endif
 
     @php $total = 0; @endphp
 

@@ -14,7 +14,10 @@ return new class extends Migration
     Schema::create('pemesanans', function (Blueprint $table) {
         $table->id();
 
-      
+        $table->foreignId('user_id')
+        ->constrained()
+        ->cascadeOnDelete();
+
         $table->string('invoice')->unique();
 
         $table->decimal('total_harga', 12, 2);

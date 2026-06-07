@@ -36,16 +36,45 @@
 
             <div>
                 <p class="text-slate-500 text-sm">Total</p>
-                <h2 class="text-xl font-black">
-                    Rp {{ number_format($pemesanan->total_harga, 0, ',', '.') }}
-                </h2>
+                <span
+                class="
+                    inline-block px-4 py-2 rounded-full font-bold text-sm mt-2
+
+                    @if ($pemesanan->status === 'pending')
+                        bg-yellow-100 text-yellow-700
+
+                    @elseif ($pemesanan->status === 'dibayar')
+                        bg-blue-100 text-blue-700
+
+                    @elseif ($pemesanan->status === 'diproses')
+                        bg-cyan-100 text-cyan-700
+
+                    @elseif ($pemesanan->status === 'dikirim')
+                        bg-purple-100 text-purple-700
+
+                    @elseif ($pemesanan->status === 'selesai')
+                        bg-green-100 text-green-700
+
+                    @elseif ($pemesanan->status === 'dibatalkan')
+                        bg-red-100 text-red-700
+                    @endif
+                "
+            >
+                {{ ucfirst($pemesanan->status) }}
+            </span>
             </div>
+           @if ($pemesanan->status === 'pending')
             <a
                 href="/pesanan/{{ $pemesanan->invoice }}/upload-bukti"
                 class="inline-block mt-6 bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold"
             >
                 Upload Bukti Pembayaran
             </a>
+        @else
+            <div class="inline-block mt-6 bg-green-100 text-green-700 px-6 py-3 rounded-2xl font-bold">
+                Bukti pembayaran sudah dikirim
+            </div>
+        @endif
         </div>
     </div>
 

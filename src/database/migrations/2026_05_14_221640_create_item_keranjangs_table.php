@@ -24,6 +24,10 @@ return new class extends Migration
 
         $table->integer('qty');
 
+        $table->decimal('harga', 12, 2);
+        
+        $table->decimal('subtotal', 12, 2);
+
         $table->timestamps();
     });
     }

@@ -143,8 +143,32 @@
 </section>
 
 <footer class="bg-white border-t mt-16">
-    <div class="max-w-7xl mx-auto px-6 py-8 text-center text-slate-500">
-        © {{ date('Y') }} ONE-CLICK TKD - Sistem Penjualan Alat Taekwondo
+    <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+
+        <div>
+            <h3 class="text-2xl font-black text-blue-700">ONE-CLICK TKD</h3>
+            <p class="text-slate-500 mt-2">
+                Sistem penjualan perlengkapan taekwondo berbasis web.
+            </p>
+        </div>
+
+        <div>
+            <h4 class="font-bold mb-3">Kontak</h4>
+            <p class="text-slate-500">WhatsApp: 0898998989</p>
+            <p class="text-slate-500">Email: oneclicktkd@mail.com</p>
+        </div>
+
+        <div>
+            <h4 class="font-bold mb-3">Pembayaran</h4>
+            <p class="text-slate-500">
+                Transfer manual lalu upload bukti pembayaran melalui halaman pesanan.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="border-t text-center text-slate-500 py-5">
+        © {{ date('Y') }} ONE-CLICK TKD
     </div>
 </footer>
 

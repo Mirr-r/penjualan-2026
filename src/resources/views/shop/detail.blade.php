@@ -34,6 +34,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+    <div class="mb-6 bg-red-100 border border-red-300 text-red-700 px-6 py-4 rounded-2xl font-semibold">
+        {{ session('error') }}
+    </div>
+    @endif
+
     <div class="bg-white rounded-3xl shadow-sm overflow-hidden grid md:grid-cols-2 gap-10 p-8">
         <div class="bg-slate-100 rounded-3xl flex items-center justify-center p-10">
             @if ($produk->gambar)
@@ -88,12 +94,25 @@
             <form action="/keranjang/{{ $produk->id }}" method="POST">
                 @csrf
 
+                @if ($produk->stok > 0)
+                <form action="/keranjang/{{ $produk->id }}" method="POST">
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="w-full mt-10 bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-2xl font-bold text-lg transition"
+                    >
+                        Tambah ke Keranjang
+                    </button>
+                </form>
+            @else
                 <button
-                    type="submit"
-                    class="w-full mt-10 bg-blue-700 hover:bg-blue-800 text-white py-4 rounded-2xl font-bold text-lg transition"
+                    disabled
+                    class="w-full mt-10 !bg-slate-400 !text-white py-4 rounded-2xl font-bold text-lg cursor-not-allowed"
                 >
-                    Tambah ke Keranjang
+                    Stok Habis
                 </button>
+            @endif
             </form>
         </div>
     </div>

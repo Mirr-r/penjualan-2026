@@ -54,9 +54,23 @@
                         </a>
 
                     </div>
+                    @php
+                        $statusColor = match ($pemesanan->status) {
+                            'pending' => 'background:#fef3c7;color:#a16207;',
+                            'dibayar' => 'background:#dbeafe;color:#1d4ed8;',
+                            'diproses' => 'background:#cffafe;color:#0e7490;',
+                            'dikirim' => 'background:#f3e8ff;color:#7e22ce;',
+                            'selesai' => 'background:#dcfce7;color:#15803d;',
+                            'dibatalkan' => 'background:#fee2e2;color:#b91c1c;',
+                            default => 'background:#e5e7eb;color:#374151;',
+                        };
+                    @endphp
 
-                    <span class="px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-bold text-sm">
-                        {{ $pemesanan->status }}
+                    <span
+                        style="{{ $statusColor }}"
+                        class="px-4 py-2 rounded-full font-bold text-sm"
+                    >
+                        {{ ucfirst($pemesanan->status) }}
                     </span>
 
                 </div>

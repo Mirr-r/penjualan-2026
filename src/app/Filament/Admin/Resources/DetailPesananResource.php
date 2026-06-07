@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DetailPesananResource extends Resource
 {
     protected static ?string $model = DetailPesanan::class;
+    
+    protected static ?string $navigationLabel = 'Detail Pesanan';
+    protected static ?string $modelLabel = 'Detail Pesanan';
+    protected static ?string $pluralModelLabel = 'Detail Pesanan';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

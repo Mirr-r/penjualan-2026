@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
 use Illuminate\Support\Facades\Response;
 use App\Models\Produk;
-use APP\Models\Pemesanan;
+use App\Models\Pemesanan;
 use App\Models\DetailPesanan;
+use Midtrans\Snap;
+use Midtrans\Config;
+use Midtrans\Notification;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +75,17 @@ Route::get('/keranjang', function () {
 
 Route::post('/keranjang/{produk}', function (Produk $produk) {
 
+    if ($produk->stok <= 0) {
+        return back()->with('error', 'Stok produk habis.');
+    }
+
     $keranjang = session()->get('keranjang', []);
+
+    $qtySekarang = $keranjang[$produk->id]['qty'] ?? 0;
+
+    if ($qtySekarang + 1 > $produk->stok) {
+        return back()->with('error', 'Jumlah produk melebihi stok tersedia.');
+    }
 
     if (isset($keranjang[$produk->id])) {
         $keranjang[$produk->id]['qty']++;
@@ -98,9 +112,19 @@ Route::post('/checkout', function () {
         return redirect('/keranjang');
     }
 
+    foreach ($keranjang as $item) {
+        $produk = Produk::find($item['id']);
+
+        if (!$produk || $produk->stok < $item['qty']) {
+            return redirect('/keranjang')
+                ->with('error', 'Stok produk ' . $item['nama'] . ' tidak mencukupi.');
+        }
+    }
+
     $total = collect($keranjang)->sum(fn ($item) => $item['harga'] * $item['qty']);
 
     $pemesanan = Pemesanan::create([
+        'user_id' => 1,
         'invoice' => 'INV-' . time(),
         'total_harga' => $total,
         'status' => 'pending',
@@ -123,13 +147,80 @@ Route::post('/checkout', function () {
         }
     }
 
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+    Config::$isSanitized = config('midtrans.is_sanitized');
+    Config::$is3ds = config('midtrans.is_3ds');
+
+    $params = [
+        'transaction_details' => [
+            'order_id' => $pemesanan->invoice,
+            'gross_amount' => (int) $pemesanan->total_harga,
+        ],
+        'customer_details' => [
+            'first_name' => 'Customer',
+            'email' => 'customer@example.com',
+        ],
+    ];
+
+    $snapToken = Snap::getSnapToken($params);
+
     session()->forget('keranjang');
 
-    return redirect('/checkout/sukses/' . $pemesanan->invoice);
+    return view('shop.checkout-sukses', [
+        'invoice' => $pemesanan->invoice,
+        'snapToken' => $snapToken,
+        'clientKey' => config('midtrans.client_key'),
+    ]);
 });
 
-Route::get('/checkout/sukses/{invoice}', function ($invoice) {
-    return view('shop.checkout-sukses', compact('invoice'));
+Route::post('/midtrans/callback', function (Request $request) {
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+    Config::$isSanitized = config('midtrans.is_sanitized');
+    Config::$is3ds = config('midtrans.is_3ds');
+
+    $notification = new Notification();
+
+    $invoice = $notification->order_id;
+    $transactionStatus = $notification->transaction_status;
+    $fraudStatus = $notification->fraud_status ?? null;
+
+    $pemesanan = Pemesanan::where('invoice', $invoice)->first();
+
+    if (! $pemesanan) {
+        return response()->json([
+            'message' => 'Pemesanan tidak ditemukan',
+        ], 404);
+    }
+
+    if ($transactionStatus === 'capture') {
+        if ($fraudStatus === 'accept') {
+            $pemesanan->update([
+                'status' => 'dibayar',
+                'catatan' => 'Pembayaran berhasil melalui Midtrans',
+            ]);
+        }
+    } elseif ($transactionStatus === 'settlement') {
+        $pemesanan->update([
+            'status' => 'dibayar',
+            'catatan' => 'Pembayaran berhasil melalui Midtrans',
+        ]);
+    } elseif ($transactionStatus === 'pending') {
+        $pemesanan->update([
+            'status' => 'pending',
+            'catatan' => 'Menunggu pembayaran Midtrans',
+        ]);
+    } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+        $pemesanan->update([
+            'status' => 'dibatalkan',
+            'catatan' => 'Pembayaran gagal atau dibatalkan melalui Midtrans',
+        ]);
+    }
+
+    return response()->json([
+        'message' => 'Callback berhasil diproses',
+    ]);
 });
 
 Route::post('/keranjang/{id}/tambah', function ($id) {

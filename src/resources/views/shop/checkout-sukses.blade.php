@@ -6,7 +6,27 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+<script
+    src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{ $clientKey }}">
+</script>
 
+<script>
+    window.snap.pay('{{ $snapToken }}', {
+        onSuccess: function(result) {
+            window.location.href = '/pesanan';
+        },
+        onPending: function(result) {
+            window.location.href = '/pesanan';
+        },
+        onError: function(result) {
+            alert('Pembayaran gagal.');
+        },
+        onClose: function() {
+            alert('Kamu menutup popup pembayaran.');
+        }
+    });
+</script>
 <body class="bg-slate-100">
 
 <div class="min-h-screen flex items-center justify-center px-6">
