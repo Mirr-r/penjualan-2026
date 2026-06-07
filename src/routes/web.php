@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Response;
 use App\Models\Produk;
 use App\Models\Pemesanan;
 use App\Models\DetailPesanan;
+use App\Models\Setting;
 use Midtrans\Snap;
 use Midtrans\Config;
 use Midtrans\Notification;
@@ -27,29 +28,10 @@ Livewire::setScriptRoute(function ($handle) {
 
 Route::get('/', function () {
 
-    $search = request('search');
-    $kategori = request('kategori');
-
-    $produks = Produk::with('kategori')
-        ->when($search, function ($query) use ($search) {
-            $query->where('nama', 'like', "%{$search}%")
-                ->orWhere('merk', 'like', "%{$search}%");
-        })
-        ->when($kategori, function ($query) use ($kategori) {
-            $query->whereHas('kategori', function ($q) use ($kategori) {
-                $q->where('slug', $kategori);
-            });
-        })
-        ->latest()
-        ->get();
-
-    $kategoris = \App\Models\Kategori::all();
+    $setting = Setting::first();
 
     return view('shop.index', compact(
-        'produks',
-        'search',
-        'kategori',
-        'kategoris'
+        'setting',
     ));
 });
 
