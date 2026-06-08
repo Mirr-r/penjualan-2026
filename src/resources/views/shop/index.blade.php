@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>ONE-CLICK TKD</title>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-@livewireScripts
 
 <body class="bg-slate-100 text-slate-900">
 
 <nav class="bg-white border-b shadow-sm">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div>
-            <h3 class="text-2xl font-black text-blue-700">
-    {{ $setting->nama_toko ?? 'ONE-CLICK TKD' }}
-            </h3>
+        <div class="flex items-center gap-3">
+            <img
+                src="{{ asset('images/logo.png') }}"
+                alt="ONE-CLICK TKD"
+                class="h-20 w-20 object-contain"
+            >
 
-            <p class="text-slate-500 mt-2">
-                {{ $setting->deskripsi ?? 'Sistem penjualan perlengkapan taekwondo berbasis web.' }}
-            </p>
+            <div>
+                <h1 class="text-3xl font-black text-blue-700">
+                    {{ $setting->nama_toko ?? 'ONE-CLICK TKD' }}
+                </h1>
+
+                <p class="text-sm text-slate-500">
+                    {{ $setting->tagline ?? 'Sistem Penjualan Alat Taekwondo' }}
+                </p>
+            </div>
         </div>
 
         <div class="flex gap-6 font-semibold">
@@ -48,47 +56,45 @@
         </div>
 
         <div class="hidden md:flex justify-center">
-            <div class="text-[180px]">🥋</div>
+            <img
+                src="{{ asset('images/logo.png') }}"
+                alt="ONE-CLICK TKD"
+                class="w-96 h-96 object-contain"
+            >
         </div>
     </div>
 </section>
 
 <livewire:produk-list />
 
-
 <footer class="bg-white border-t mt-16">
     <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
 
         <div>
-            <h3 class="text-2xl font-black text-blue-700">ONE-CLICK TKD</h3>
+            <div class="flex items-center gap-3 mb-3">
+                <img
+                    src="{{ asset('images/logo.png') }}"
+                    alt="ONE-CLICK TKD"
+                    class="h-12 w-12 object-contain"
+                >
+            </div>
             <p class="text-slate-500 mt-2">
-                Sistem penjualan perlengkapan taekwondo berbasis web.
+                {{ $setting->deskripsi ?? 'Sistem penjualan perlengkapan taekwondo berbasis web.' }}
             </p>
         </div>
 
         <div>
             <h4 class="font-bold mb-3">Kontak</h4>
-            <p class="text-slate-500">
-                WhatsApp: {{ $setting->whatsapp ?? '-' }}
-            </p>
-
-            <p class="text-slate-500">
-                Email: {{ $setting->email ?? '-' }}
-            </p>
-
-            <p class="text-slate-500">
-                Instagram: {{ $setting->instagram ?? '-' }}
-            </p>
-
-            <p class="text-slate-500">
-                Alamat: {{ $setting->alamat ?? '-' }}
-            </p>
+            <p class="text-slate-500">WhatsApp: {{ $setting->whatsapp ?? '-' }}</p>
+            <p class="text-slate-500">Email: {{ $setting->email ?? '-' }}</p>
+            <p class="text-slate-500">Instagram: {{ $setting->instagram ?? '-' }}</p>
+            <p class="text-slate-500">Alamat: {{ $setting->alamat ?? '-' }}</p>
         </div>
 
         <div>
             <h4 class="font-bold mb-3">Pembayaran</h4>
             <p class="text-slate-500">
-                Transfer manual lalu upload bukti pembayaran melalui halaman pesanan.
+                Pembayaran dapat dilakukan melalui Midtrans atau upload bukti pembayaran.
             </p>
         </div>
 
@@ -99,5 +105,6 @@
     </div>
 </footer>
 
+@livewireScripts
 </body>
 </html>

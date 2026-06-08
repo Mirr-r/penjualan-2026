@@ -53,7 +53,7 @@
                         <button
                             wire:click="hapusItem('{{ $id }}')"
                             onclick="return confirm('Hapus produk ini dari keranjang?')"
-                            class="bg-red-600 text-white px-4 py-2 rounded-xl font-bold"
+                            class="bg-red-600 text-black px-4 py-2 rounded-xl font-bold"
                         >
                             Hapus
                         </button>
@@ -84,7 +84,7 @@
 
                     <button
                         type="submit"
-                        class="bg-green-600 text-white px-8 py-3 rounded-2xl font-bold"
+                        class="bg-green-600 text-black px-8 py-3 rounded-2xl font-bold"
                     >
                         Checkout
                     </button>

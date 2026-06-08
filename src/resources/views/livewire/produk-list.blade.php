@@ -66,7 +66,14 @@
                             <div class="mt-4 space-y-1 text-sm text-slate-500">
                                 <p>Merk: <span class="font-semibold text-slate-700">{{ $produk->merk ?? '-' }}</span></p>
                                 <p>Ukuran: <span class="font-semibold text-slate-700">{{ $produk->ukuran ?? '-' }}</span></p>
-                                <p>Stok: <span class="font-semibold text-slate-700">{{ $produk->stok }}</span></p>
+                                <p>
+                                    Stok:
+                                    @if ($produk->stok > 0)
+                                        <span class="font-bold text-green-600">{{ $produk->stok }}</span>
+                                    @else
+                                        <span class="font-bold text-red-600">Habis</span>
+                                    @endif
+                                </p>
                             </div>
 
                             <a
